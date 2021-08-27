@@ -1,0 +1,55 @@
+﻿using System;
+using static System.Console;
+using System.Threading;
+using System.Threading.Tasks;
+using System.IO;
+using System.Collections.Generic;
+using ZSearcher.Business.Interfaces;
+
+namespace ZSearcher.Business.Services
+{
+    public class FileSearcherService : IFileSearcherService {
+        private string FilePath { get; set; }
+        private List<string> Keywords { get; set; }
+        private List<string> Results { get; set; }
+
+        //private int filesRead;
+        //private int totalFilesRead;
+
+        public FileSearcherService(string filePath) {
+            this.FilePath = filePath;
+            this.Results = new();
+        }
+
+        public void SetKeywords(string str) {
+            Keywords = new List<string>();
+
+            foreach (string s in str.Split(' ')) {
+                Keywords.Add(s);
+            }
+        }
+
+        public void PrintResults() {
+            Results.ForEach(res => WriteLine(res));
+        }
+
+        public void FindInFiles() {
+            string[] filePaths = Directory.GetFiles(FilePath, "*.*", SearchOption.AllDirectories);
+            List<string> res = new List<string>();
+
+            Parallel.ForEach(filePaths, fp => ReadFile(fp, Results) );
+
+            //res.ForEach(result => WriteLine(result));
+        }
+
+        private void ReadFile(string filepath, List<string> results) {
+            string[] fileData = File.ReadAllLines(filepath);
+
+            Parallel.ForEach(fileData, line => {
+                if (line.Contains(Keywords[0])) {
+                    results.Add($"{filepath} : {line}");
+                }
+            });
+        }
+    }
+}
