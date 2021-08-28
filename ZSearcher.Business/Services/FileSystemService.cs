@@ -21,7 +21,6 @@ namespace ZSearcher.Business.Services
             int i = 0;
             foreach (string fpath in files) {
                 FileRepository.Add(new DataStruct() {
-                        index = i,
                         path = fpath.ToCharArray(),
                         data = "ik ben de data van {i}".ToCharArray()
                 });

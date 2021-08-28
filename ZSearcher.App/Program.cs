@@ -10,8 +10,8 @@ namespace ZSearcher.App
         static void Main(string[] args) {
             const string root = "../../0_LIBRARY";
 
-            //IFileSearcherService SearchService = new FileSearcherService();
-            IFileSearcherService SearchService = new AdvancedSearcherService();
+            IFileSearcherService SearchService = new FileSearcherService();
+            //IFileSearcherService SearchService = new AdvancedSearcherService();
             IFileSystemService FileSystemService = new FileSystemService();
 
             var zShell = new Shell(root, SearchService, FileSystemService);

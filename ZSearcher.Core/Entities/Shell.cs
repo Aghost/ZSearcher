@@ -46,7 +46,8 @@ namespace ZSearcher.Core.Entities
             switch(cmds.Length) {
                 case 1:
                     switch(cmds[0]) {
-                        case "help":    return $"help|info|fsinfo|mkindex|makefs|getfs|prompt|search|print|exit";
+                        case "help":    return $"help|info|fsinfo|mkindex|makefs|getfs|prompt|search|print|exit|";
+                        case "help1":    return $"cd|";
                         case "info":    return $"RootDirectory: {RootDirectory}\nCurrentDirectory: {CurrentDirectory}\n";
                         case "fsinfo":  return FileSystem.GetInfo();
                         case "mkindex":
@@ -87,9 +88,10 @@ namespace ZSearcher.Core.Entities
                 WriteLine("no results...");
                 return;
             } else {
-                foreach (string str in CurrentResults) WriteLine(str);
+                foreach (string str in CurrentResults) {
+                    WriteLine(str);
+                }
             }
-
         }
 
         private void SetPromptBase(string input) {

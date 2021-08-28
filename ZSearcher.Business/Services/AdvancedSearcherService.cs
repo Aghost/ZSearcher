@@ -20,17 +20,24 @@ namespace ZSearcher.Business.Services
         }
 
         public void ReadFile(string file_path, string search_string, List<string> results) {
-            KMPSearch("banaan".ToCharArray(), "aardappelbanaanaardappelbanaan".ToCharArray());
+            string[] fileData = File.ReadAllLines(file_path);
+
+            char[] tmp1 = file_path.ToCharArray();
+            char[] tmp2 = search_string.ToCharArray();
+
+            Parallel.ForEach(fileData, line => KMPSearch(tmp1, tmp2, results) );
+
+            //KMPSearch("banaan".ToCharArray(), "aardappelbanaanaardappelbanaan".ToCharArray());
         }
 
-        public string KMPSearch(char[] pattern, char[] line) {
+        public void KMPSearch(char[] pattern, char[] line, List<string> results) {
             int patternLength = pattern.Length;
             int lineLength = line.Length;
 
             int[] longest_fix = new int[patternLength];
             int patternIndex = 0;
 
-            ComputeLongest(pattern, patternLength, ref longest_fix);
+            ComputeLongest(pattern, patternLength, longest_fix);
 
             int lineIndex = 0;
 
@@ -40,7 +47,7 @@ namespace ZSearcher.Business.Services
                     lineIndex++;
                 }
                 if (patternIndex == patternLength) {
-                    WriteLine($"found pattern at index {lineIndex - patternIndex}, ending at {(lineIndex - patternIndex) + patternLength}");
+                    results.Add($"found pattern at index {lineIndex - patternIndex}, ending at {(lineIndex - patternIndex) + patternLength}");
                     patternIndex = longest_fix[patternIndex - 1];
                 }
                 else if (lineIndex < lineLength && pattern[patternIndex] != line[lineIndex]) {
@@ -51,10 +58,10 @@ namespace ZSearcher.Business.Services
                 }
             }
 
-            return $"{new string(pattern)} {new string(line)} {patternLength} {lineLength}";
+            //results.Add($"{new string(pattern)} {new string(line)} {patternLength} {lineLength}");
         }
 
-        private void ComputeLongest(char[] pattern, int M, ref int[] longest_fix) {
+        private void ComputeLongest(char[] pattern, int M, int[] longest_fix) {
             int len = 0;
             int i = 1;
             longest_fix[0] = 0;
